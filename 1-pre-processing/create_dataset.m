@@ -3,19 +3,29 @@ loopProgram = true;
 while (loopProgram)
 
     listOfFiles = openFolder();
-    tableR = mergeDatasetFromFileList(listOfFiles);
-    tableR.ID_Row = linspace(1, height(tableR), height(tableR))';
-    tableR = movevars(tableR, "ID_Row","Before","Spectrum");
+    mergedDataset = mergeDatasetFromFileList(listOfFiles);
+    
+    % adding id_row to the Additional_Spectrum_Information table
+    mergedDataset.Additional_Spectrum_Information.ID_Row = ...
+        linspace(1, height(mergedDataset.Additional_Spectrum_Information), height(mergedDataset.Additional_Spectrum_Information))';
+    mergedDataset.Additional_Spectrum_Information = movevars(mergedDataset.Additional_Spectrum_Information, "ID_Row","Before","Volume");
+
+    % adding id_row to the Spectrum.Y table
+    mergedDataset.Spectrum.Y.ID_Row = ...
+        linspace(1, height(mergedDataset.Additional_Spectrum_Information), height(mergedDataset.Additional_Spectrum_Information))';
+    mergedDataset.Spectrum.Y = movevars(mergedDataset.Spectrum.Y, "ID_Row", "Before", "y1");
+    
     notSaved = true;
     while(notSaved)
-        str = input('Enter file name: ','s');
-        if not(isempty(str))
-             writetable(tableR,strcat(str,".xlsx"));
-             notSaved = false;
-        end  
+
+        [filename, filepath] = uiputfile({'*.mat', 'MAT-files (*.mat)'}, ...
+            'Save Merged dataset', '../../0-Dataset/1-Merged/merged_dataset.mat');
+        if ischar(filename)
+            save(fullfile(filepath, filename), '-struct', 'mergedDataset');
+            notSaved = false;
+        end
     end
    
-
     fprintf("\n-----------------------------------------------\n");
     str = input('Add new files? [Y]/[N]: ','s');
     if not(isempty(str))
@@ -28,7 +38,7 @@ end
 
 
 %% Merge dataset from filelist
-function [tableResult] = mergeDatasetFromFileList(listOfFile)
+function [mergedDataset] = mergeDatasetFromFileList(listOfFile)
     numFile = height(listOfFile);
     listOfFile = struct2table(listOfFile);
     tableResult = table();
@@ -43,20 +53,42 @@ function [tableResult] = mergeDatasetFromFileList(listOfFile)
    
     tableResult.Cell_Parameters = [];
     tableResult = [tableResult cellParameters];
-    splitSpectrum(tableResult.Spectrum);
+    spectrum = splitSpectrum(tableResult.Spectrum);
+
+    tableResult.Spectrum = [];
+
+    mergedDataset = struct ('Spectrum', spectrum,...
+        'Additional_Spectrum_Information', tableResult);
 end
 
 %% Split spectrum in atoms
 function [spectrum] = splitSpectrum(rawSpectrum)
     coordinateSpectrum = split(rawSpectrum, ' ');
-    coordinateSpectrum = split(coordinateSpectrum, ';');
+    coordinateSpectrum = str2double(split(coordinateSpectrum, ';'));
+
+    nCoord = width(coordinateSpectrum(:,:,1));
+    xName = cell(1,nCoord);
+    yName = cell(1,nCoord);
+
+    for i = 1:nCoord
+        xName(i) = {strcat('x', num2str(i))};
+        yName(i) = {strcat('y', num2str(i))};
+    end
+
+    x = array2table(coordinateSpectrum(:,:,1), 'VariableNames',xName);
+    x = x(1,:);
+    y = array2table(coordinateSpectrum(:,:,2), 'VariableNames',yName);
+
+    spectrum = struct();
+    spectrum.X = x;
+    spectrum.Y = y;
 end
 
 
 
 %% Select a folder in which data are stored
 function [files] = openFolder ()
-    d = uigetdir(pwd, 'Select a folder');
+    d = uigetdir('../../0-Dataset/0-Original', 'Select a folder with dataset');
     files = dir(fullfile(d, '*.txt'));   
 end
 
