@@ -1,5 +1,5 @@
-%% Form to insert dataset structure details by user
 function [nPeaksToKeep, threshold, useMaxPeaks, useTotalNPeaks, replaceMissingPeaksWithZero, response] = insert_dataset_structure_details()
+%INSERT_DATASET_STRUCTURE_DETAILS Form to insert dataset structure details by user
     fprintf('Insert dataset structure details\n');
 
     while 1

@@ -1,10 +1,13 @@
+%RUN_EXPERIMENT Script to run the experiment
+
 %addpath(genpath('..\0-Dataset\1-Merged\'));
 addpath(genpath('1-pre-processing'));
 addpath(genpath('2-machine-learning-function'));
 addpath(genpath('3-trained-models'));
+addpath(genpath('7-utils'));
 
 %% Load dataset
-[data, filename] = openFolder();
+[data, filename] = open_folder();
 
 % Check if dataset has been loaded correctly
 fprintf("\n---------------------------------------------------------------------------------");
@@ -21,6 +24,7 @@ else
     dataset_for_experiment = create_dataset(data.Spectrum.X, data.Spectrum.Y, data.Additional_Spectrum_Information, response, ...
         nPeaksToKeep, threshold, useMaxPeaks, useTotalNPeaks, replaceMissingPeaksWithZero); 
    
+    %$ VALUTARE SE SPOSTARE IN UNA FUNZIONE 
     while 1    
         fprintf("---------------------------------------------------------------------------------");
         saveDataset = input('\n1) Do you want to save this dataset? [Y|N]: ', 's');
@@ -41,7 +45,8 @@ else
         break;
     end
 
-    % We can start the experiment
+    %% Running the experiment
+
 
     
     
@@ -72,12 +77,5 @@ end
 
 
 
-%% Select a file in which data are stored
-function [dataStruct, filename] = openFolder ()
-    dataStruct = 0;
-    [filename,pathfile] = uigetfile('../0-Dataset/1-Merged/', 'Select a dataset');
-    if(filename ~= 0)
-        dataStruct = load(fullfile(pathfile,filename));
-    end
-end
+
 

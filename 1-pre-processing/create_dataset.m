@@ -1,5 +1,7 @@
 function [dataset] = create_dataset(xSpectrum, ySpectrum, additionalInformationSpectrum, response, ...
     nPeaksToKeep, threshold, useMaxPeaks, useTotalNPeaks, replaceMissingPeaksWithZero )
+    %CREATE_DATASET Function to create the dataset to be used in the experiment, according to the user request
+    %   params: m
     
     ySpectrum.ID_Row = [];
     
