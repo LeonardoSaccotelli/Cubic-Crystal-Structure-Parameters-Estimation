@@ -12,6 +12,14 @@ function [results] = compute_metrics(obs, pred, algorithm_names, results)
         'RowNames', algorithm_names);
     %}
     
+    if(istable(obs))
+        obs = table2array(obs);
+    end
+
+    if(istable(pred))
+        pred = table2array(pred);
+    end
+    
     results(algorithm_names,'RMSE') = {computeRMSE(obs, pred)}; 
     results(algorithm_names,'MAE') = {computeMAE(obs, pred)}; 
     results(algorithm_names,'RSE') = {computeRSE(obs, pred)}; 
