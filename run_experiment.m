@@ -1,6 +1,4 @@
 %RUN_EXPERIMENT Script to run the experiment
-
-%addpath(genpath('..\0-Dataset\1-Merged\'));
 addpath(genpath('1-pre-processing'));
 addpath(genpath('2-machine-learning-function'));
 addpath(genpath('3-trained-models'));
@@ -25,7 +23,7 @@ else
         nPeaksToKeep, threshold, useMaxPeaks, useTotalNPeaks, replaceMissingPeaksWithZero); 
     
     while 1    
-        fprintf("---------------------------------------------------------------------------------");
+        fprintf("\n---------------------------------------------------------------------------------");
         saveDataset = input('\n1) Do you want to save this dataset? [Y|N]: ', 's');
         if isequal(lower(saveDataset), 'y')
             notSaved = true;
@@ -101,7 +99,6 @@ else
     result_trained_model.lsboost.validation_results.validation_metrics = results_training(algorithm_names(2), :);
     result_trained_model.lsboost.test_results.test_metrics = results_test(algorithm_names(2),:);
 
-%}
     %% Training Neural network model
     fprintf("\n===================================================================\n");
     fprintf(strcat("Training model using ", algorithm_names(3), " with k=", string(k), "\n"));

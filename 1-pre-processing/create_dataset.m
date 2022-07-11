@@ -22,19 +22,15 @@ function [dataset] = create_dataset(xSpectrum, ySpectrum, additionalInformationS
     
     %% Find peaks for each observations
     for i = 1:nObservations
-        
+
         observation = table2array(ySpectrum(i,:));
         [pks,locs] = findpeaks(observation);
     
         locsGreaterThreshold = locs(pks > threshold);
         xPeaksFeatures = xSpectrum(:,locsGreaterThreshold);
     
-        % NUMERO TOTALE DI PICCHI A PRESCINDERE DALLA SOGLIA OPPURE NEL TOTALE PICCHI PRENDO SOLO QUELLI CHE SUPERANO LA SOGLIA???
-        %  STO PRENDENDO IL NUMERO TOTALE DI PICCHI CHE SUPERA LA SOGLIA,
-        %  NON IL NUMERO TOTALE DI PICCHI A PRESCINDERE DALLA SOGLIA
-        totalNPeaks(i) = width(locsGreaterThreshold);
-        %%
-    
+        totalNPeaks(i) = width(pks);
+        
         [~, xMaxCoord] = max(table2array(ySpectrum(i,:)));
         xMaxPeaks(i) = table2array(xSpectrum(1, xMaxCoord));
     
@@ -55,6 +51,11 @@ function [dataset] = create_dataset(xSpectrum, ySpectrum, additionalInformationS
                 dataset(i,:) = [array2table(i) xPeaksFeatures array2table(missingPeaks) additionalInformationSpectrum(i,response)];
             end
         end
+
+        if (i == height(ySpectrum)) &&  (width(xPeaksFeatures) < nPeaksToKeep)
+            dataset(i,:) = [array2table(i) array2table(zeros(1, nPeaksToKeep)) additionalInformationSpectrum(i,response)];
+        end
+
     end
 
     if(useMaxPeaks)
