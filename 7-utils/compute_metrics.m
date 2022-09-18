@@ -4,14 +4,7 @@ function [results] = compute_metrics(obs, pred, algorithm_names, results)
 %   pred: predicted values from regression model
 %   algorithm_names: names of the regression model used
 %   results: table to store performance
-    
-    %{
-    results = table('Size', [1 7], ...
-        'VariableTypes', {'double','double','double', 'double', 'double', 'double', 'double'}, ...
-        'VariableNames', {'RMSE', 'MAE','RSE', 'RRSE','RAE', 'R2', 'Corr Coeff'},...
-        'RowNames', algorithm_names);
-    %}
-    
+        
     if(istable(obs))
         obs = table2array(obs);
     end
@@ -22,6 +15,7 @@ function [results] = compute_metrics(obs, pred, algorithm_names, results)
     
     results(algorithm_names,'RMSE') = {computeRMSE(obs, pred)}; 
     results(algorithm_names,'MAE') = {computeMAE(obs, pred)}; 
+    results(algorithm_names,'MAPE') = {computeMAPE(obs,pred)};
     results(algorithm_names,'RSE') = {computeRSE(obs, pred)}; 
     results(algorithm_names,'RRSE') = {sqrt(computeRSE(obs, pred))}; 
     results(algorithm_names,'RAE') = {computeRAE(obs, pred)}; 
@@ -35,6 +29,10 @@ end
 
 function [mae] = computeMAE(obs, pred)
     mae = (sum(abs(pred-obs)))/height(obs);
+end
+
+function [mape] = computeMAPE(obs,pred)
+    mape = 100*sum(abs((obs-pred)./(obs)))/height(obs);
 end
 
 function [rse] = computeRSE (obs, pred)

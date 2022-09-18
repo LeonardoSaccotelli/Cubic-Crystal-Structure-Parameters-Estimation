@@ -47,32 +47,33 @@ else
     %Create table for k-fold cross validation results
     algorithm_names = {'random_forest', 'lsboost', 'neural_network', 'regression_tree'};
     
-    results_training = table('Size', [4 7], ...
-        'VariableTypes', {'double','double','double', 'double', 'double', 'double', 'double'}, ...
-        'VariableNames', {'RMSE', 'MAE','RSE', 'RRSE','RAE', 'R2', 'Corr Coeff'},...
+    results_training = table('Size', [4 8], ...
+        'VariableTypes', {'double','double','double','double', 'double', 'double', 'double', 'double'}, ...
+        'VariableNames', {'RMSE', 'MAE','MAPE','RSE', 'RRSE','RAE', 'R2', 'Corr Coeff'},...
         'RowNames', algorithm_names);
     
-    results_test = table('Size', [4 7], ...
-        'VariableTypes', {'double','double','double', 'double', 'double', 'double', 'double'}, ...
-        'VariableNames', {'RMSE', 'MAE','RSE', 'RRSE','RAE', 'R2', 'Corr Coeff'},...
+    results_test = table('Size', [4 8], ...
+        'VariableTypes', {'double','double','double','double', 'double', 'double', 'double', 'double'}, ...
+        'VariableNames', {'RMSE', 'MAE','MAPE','RSE', 'RRSE','RAE', 'R2', 'Corr Coeff'},...
         'RowNames', algorithm_names);
 
     result_trained_model = struct();
     
     % Set maxObjectiveEvaluations as maximum number of objective functions to
     %  be evaluated in the optimization process
-    max_objective_evaluations = 30;
+    max_objective_evaluations = 60;
     
     % Set k for k-fold cross validarion
     k = 10;
+    
 
     % Split dataset in training and test set
     [training_dataset, test_dataset] = create_training_test_dataset(dataset_for_experiment,0.3);
 
     %% Training random forest model
-    fprintf("\n===================================================================\n");
+    fprintf("\n---------------------------------------------------------------------------------\n");
     fprintf(strcat("Training model using ", algorithm_names(1), " with k=", string(k), "\n"));
-    fprintf("===================================================================\n");
+    fprintf("---------------------------------------------------------------------------------\n");
     
     % save training results and performance
     result_trained_model.random_forest = random_forest_function(training_dataset(:,2:end),response,max_objective_evaluations, k);
@@ -85,9 +86,9 @@ else
     result_trained_model.random_forest.test_results.test_metrics = results_test(algorithm_names(1),:);
     
     %% Training Lsboost model
-    fprintf("\n===================================================================\n");
+    fprintf("---------------------------------------------------------------------------------\n");
     fprintf(strcat("Training model using ", algorithm_names(2), " with k=", string(k), "\n"));
-    fprintf("===================================================================\n");
+    fprintf("---------------------------------------------------------------------------------\n");
     
     % save training results and performance
     result_trained_model.lsboost = lsboost_function(training_dataset(:,2:end),response,max_objective_evaluations, k);
@@ -100,9 +101,9 @@ else
     result_trained_model.lsboost.test_results.test_metrics = results_test(algorithm_names(2),:);
 
     %% Training Neural network model
-    fprintf("\n===================================================================\n");
+    fprintf("---------------------------------------------------------------------------------\n");
     fprintf(strcat("Training model using ", algorithm_names(3), " with k=", string(k), "\n"));
-    fprintf("===================================================================\n");
+    fprintf("---------------------------------------------------------------------------------\n");
     
     % save training results and performance
     result_trained_model.neural_network = neural_network_function(training_dataset(:,2:end),response,1,3,1,50,max_objective_evaluations, k);
@@ -113,12 +114,12 @@ else
     
     result_trained_model.neural_network.validation_results.validation_metrics = results_training(algorithm_names(3), :);
     result_trained_model.neural_network.test_results.test_metrics = results_test(algorithm_names(3),:);
-
+    %}
 
     %% Training Regression tree
-    fprintf("\n===================================================================\n");
+    fprintf("---------------------------------------------------------------------------------\n");
     fprintf(strcat("Training model using ", algorithm_names(4), " with k=", string(k), "\n"));
-    fprintf("===================================================================\n");
+    fprintf("---------------------------------------------------------------------------------\n");
     
     % save training results and performance
     result_trained_model.regression_tree = regression_tree_function(training_dataset(:,2:end),response,max_objective_evaluations, k);

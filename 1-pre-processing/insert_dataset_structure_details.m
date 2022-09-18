@@ -18,6 +18,17 @@ function [nPeaksToKeep, threshold, useMaxPeaks, useTotalNPeaks, replaceMissingPe
         end
     end
 
+    while 1
+        fprintf("---------------------------------------------------------------------------------");
+        useTotalNPeaks = input('\n4) Do you want to use totalNPeaks as a feature in the experiment? [Y|N]: ', 's');
+        if isequal(lower(useTotalNPeaks), 'y')
+            useTotalNPeaks = true;
+            break;
+        elseif isequal(lower(useTotalNPeaks), 'n')
+            useTotalNPeaks = false;
+            break;
+        end
+    end
 
     while 1
         fprintf("---------------------------------------------------------------------------------");
@@ -27,18 +38,6 @@ function [nPeaksToKeep, threshold, useMaxPeaks, useTotalNPeaks, replaceMissingPe
             break;
         elseif isequal(lower(useMaxPeaks), 'n')
             useMaxPeaks = false;
-            break;
-        end
-    end
-
-    while 1
-        fprintf("---------------------------------------------------------------------------------");
-        useTotalNPeaks = input('\n4) Do you want to use totalNPeaks as a feature in the experiment? [Y|N]: ', 's');
-        if isequal(lower(useTotalNPeaks), 'y')
-            useTotalNPeaks = true;
-            break;
-        elseif isequal(lower(useTotalNPeaks), 'n')
-            useTotalNPeaks = false;
             break;
         end
     end

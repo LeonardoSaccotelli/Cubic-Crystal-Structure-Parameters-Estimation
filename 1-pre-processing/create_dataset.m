@@ -47,7 +47,7 @@ function [dataset] = create_dataset(xSpectrum, ySpectrum, additionalInformationS
             % select one on this modality.
             if (replaceMissingPeaksWithZero)
                 % In this case we replace with zeroes the missing peaks
-                missingPeaks = zeros(1, nPeaksToKeep-totalNPeaks(i));
+                missingPeaks = zeros(1, nPeaksToKeep-width(xPeaksFeatures));
                 dataset(i,:) = [array2table(i) xPeaksFeatures array2table(missingPeaks) additionalInformationSpectrum(i,response)];
             end
         end
@@ -56,8 +56,9 @@ function [dataset] = create_dataset(xSpectrum, ySpectrum, additionalInformationS
             dataset(i,:) = [array2table(i) array2table(zeros(1, nPeaksToKeep)) additionalInformationSpectrum(i,response)];
         end
 
+        fprintf("\n Dataset creation progress: %.2f %%", round(i*100/nObservations,2));
     end
-
+    
     if(useMaxPeaks)
         dataset.MaxPeaks = xMaxPeaks;
     end
