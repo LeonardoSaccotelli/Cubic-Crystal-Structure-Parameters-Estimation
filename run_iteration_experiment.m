@@ -20,7 +20,7 @@ else
     % Select the features to be included in the dataset
     nPeaksToKeep = [10 15 20 25 30 40 50];
     threshold = 1;
-    useMaxPeaks = true;
+    useMaxPeaks = false;
     useTotalNPeaks = true;
     replaceMissingPeaksWithZero = false;
     response = {'a'};
@@ -41,8 +41,6 @@ else
     
     % Set k for k-fold cross validarion
     k = 10;
-  
-
     
     for i = 1: numel(nPeaksToKeep)
         dataset_for_experiment = create_dataset(data.Spectrum.X, data.Spectrum.Y, data.Additional_Spectrum_Information, response, ...
@@ -125,5 +123,3 @@ end
 function [rmse] = computeRMSE(obs, pred)
     rmse = sqrt(sum((obs - pred).^2)/height(obs));
 end
-
-
