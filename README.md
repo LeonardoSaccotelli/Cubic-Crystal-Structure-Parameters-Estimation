@@ -3,7 +3,7 @@ Preliminary investigation of machine learning techniques to perform parameters e
 Starting from a spectral, which represent a cubic crystal structure, the aim is to develop a ML model which can predict the three different parameters size: <i>a</i>, <i>b</i>, <i>c</i>. 
 Each observation is a couple (x<sub>i</sub>, y<sub>i</sub>), for which x<sub>i</sub> is a value between 0 and 90, with an increment of 0.02; y<sub>i</sub> is the intensity. 
 For the cubic structure the three dimensions are all equal; thus, for the cubic structure is a one-output regression problem. <br> Different ML algorithms have been implemented, such as: Regression Tree, Random Forest, LSBoost, Neural Network.
-Three different experiment have been runned. 1
+Three different experiment have been runned. 
 
 ## Experiment #1
 To run the <b>Experiment #1:</b> 
